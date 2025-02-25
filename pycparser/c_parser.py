@@ -543,6 +543,7 @@ class CParser(PLYParser):
     def p_external_declaration_3(self, p):
         """ external_declaration    : pp_directive
                                     | pppragma_directive
+                                    | ppinclude_directive
         """
         p[0] = [p[1]]
 
@@ -594,6 +595,20 @@ class CParser(PLYParser):
         """
         p[0] = [p[1]] if len(p) == 2 else p[1] + [p[2]]
 
+    # Support the #include
+    def p_ppinclude_directive(self, p):
+        """ ppinclude_directive      : PPINCLUDE
+                                    | PPINCLUDE PPINCLUDESTR
+                                    | PPINCLUDE LT PPINCLUDE GT
+        """
+        p[0] = c_ast.Include(p[2], self._token_coord(p, 2))
+
+    def p_ppinclude_directive_list(self, p):
+        """ ppinclude_directive_list : ppinclude_directive
+                                    | ppinclude_directive_list ppinclude_directive
+        """
+        p[0] = [p[1]] if len(p) == 2 else p[1] + [p[2]]
+
     # In function definitions, the declarator can be followed by
     # a declaration list, for old "K&R style" function definitios.
     def p_function_definition_1(self, p):
@@ -637,6 +652,7 @@ class CParser(PLYParser):
                         | iteration_statement
                         | jump_statement
                         | pppragma_directive
+                        | ppinclude_directive
                         | static_assert
         """
         p[0] = p[1]

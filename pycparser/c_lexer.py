@@ -53,6 +53,7 @@ class CLexer(object):
         #
         self.line_pattern = re.compile(r'([ \t]*line\W)|([ \t]*\d+)')
         self.pragma_pattern = re.compile(r'[ \t]*pragma\W')
+        self.include_pattern = re.compile(r'[ \t]*include\W')
 
     def build(self, **kwargs):
         """ Builds the lexer from the specification. Must be
@@ -183,6 +184,8 @@ class CLexer(object):
 
         # pre-processor
         'PPHASH',       # '#'
+        'PPINCLUDE',     # 'define'
+        'PPINCLUDESTR',
         'PPPRAGMA',     # 'pragma'
         'PPPRAGMASTR',
     )
@@ -285,6 +288,10 @@ class CLexer(object):
         # pppragma: pragma
         #
         ('pppragma', 'exclusive'),
+
+        # ppinclude: include
+        #
+        ('ppinclude', 'exclusive'),
     )
 
     def t_PPHASH(self, t):
@@ -294,6 +301,8 @@ class CLexer(object):
             self.pp_line = self.pp_filename = None
         elif self.pragma_pattern.match(t.lexer.lexdata, pos=t.lexer.lexpos):
             t.lexer.begin('pppragma')
+        elif self.include_pattern.match(t.lexer.lexdata, pos=t.lexer.lexpos):
+            t.lexer.begin('ppinclude')
         else:
             t.type = 'PPHASH'
             return t
@@ -359,6 +368,28 @@ class CLexer(object):
 
     def t_pppragma_error(self, t):
         self._error('invalid #pragma directive', t)
+
+    ##
+    ## Rules for the ppdefine state
+    ##
+    def t_ppinclude_NEWLINE(self, t):
+        r'\n'
+        t.lexer.lineno += 1
+        t.lexer.begin('INITIAL')
+
+    def t_ppinclude_PPINCLUDE(self, t):
+        r'include'
+        return t
+
+    t_ppinclude_ignore = ' \t'
+
+    def t_ppinclude_STR(self, t):
+        '.+'
+        t.type = 'PPINCLUDESTR'
+        return t
+
+    def t_ppinclude_error(self, t):
+        self._error('invalid #include directive', t)
 
     ##
     ## Rules for the normal state
