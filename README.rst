@@ -1,4 +1,8 @@
 ===============
+this is a special build for a side project. I would highly recommend grabing the upstream version of this library
+===============
+
+===============
 pycparser v2.22
 ===============
 
