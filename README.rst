@@ -2,6 +2,16 @@
 this is a special build for a side project. I would highly recommend grabing the upstream version of this library
 ===============
 
+Development Install:
+
+ensure that you have your venv active. Run the following
+:
+   pip install -e .
+
+If you updated the file defines run:
+:
+  python .\\_clean_tables.py; cd .\\pycparser\\; python .\\_build_tables.py; cd ..
+
 ===============
 pycparser v2.22
 ===============
