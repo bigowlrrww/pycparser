@@ -584,3 +584,6 @@ class CLexer(object):
     def t_error(self, t):
         msg = 'Illegal character %s' % repr(t.value[0])
         self._error(msg, t)
+
+#Ignore comments if they come up
+    t_ignore_COMMENT = r'//.*|/\*[\s\S]*?\*/'
