@@ -184,7 +184,7 @@ class CLexer(object):
 
         # pre-processor
         'PPHASH',       # '#'
-        'PPINCLUDE',     # 'define'
+        'PPINCLUDE',     # 'include'
         'PPINCLUDESTR',
         'PPPRAGMA',     # 'pragma'
         'PPPRAGMASTR',
@@ -370,7 +370,7 @@ class CLexer(object):
         self._error('invalid #pragma directive', t)
 
     ##
-    ## Rules for the ppdefine state
+    ## Rules for the ppinclude state
     ##
     def t_ppinclude_NEWLINE(self, t):
         r'\n'
@@ -586,4 +586,5 @@ class CLexer(object):
         self._error(msg, t)
 
 #Ignore comments if they come up
-    t_ignore_COMMENT = r'//.*|/\*[\s\S]*?\*/'
+    t_ignore_COMMENT = r'//.*'
+    t_ignore_COMMENT_MULTILINE = r'/\*[\s\S]*?\*/'
