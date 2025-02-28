@@ -109,6 +109,7 @@ class CLexer(object):
         'VOLATILE', 'WHILE', '__INT128',
         'UINT8_T', 'UINT16_T', 'UINT32_T', 'UINT64_T',
         'INT8_T', 'INT16_T', 'INT32_T', 'INT64_T',
+        'SIZE_T',
     )
 
     keywords_new = (

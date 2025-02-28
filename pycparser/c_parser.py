@@ -900,6 +900,7 @@ class CParser(PLYParser):
                                       | INT16_T
                                       | INT32_T
                                       | INT64_T
+                                      | SIZE_T
         """
         p[0] = c_ast.IdentifierType([p[1]], coord=self._token_coord(p, 1))
 
