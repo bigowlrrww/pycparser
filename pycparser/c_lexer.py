@@ -456,7 +456,6 @@ class CLexer(object):
     t_RBRACKET          = r'\]'
     t_COMMA             = r','
     t_PERIOD            = r'\.'
-    t_SEMI              = r';'
     t_COLON             = r':'
     t_ELLIPSIS          = r'\.\.\.'
 
@@ -582,6 +581,15 @@ class CLexer(object):
         t.type = self.keyword_map.get(t.value, "ID")
         if t.type == 'ID' and self.type_lookup_func(t.value):
             t.type = "TYPEID"
+        if self.last_token != None:
+            if t.type == 'ID' and self.last_token.type == 'ID': #need to look ahead instead.
+                t.type = "TYPEID"
+        return t
+
+    @TOKEN(r';')
+    def t_SEMI(self,t):
+        t.type = "SEMI"
+        self.last_token = t
         return t
 
     def t_error(self, t):
